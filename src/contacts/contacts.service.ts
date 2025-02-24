@@ -12,35 +12,30 @@ export class ContactsService {
     private contactsRepository: Repository<Contact>,
   ) {}
 
-  create(createContactDto: CreateContactDto) {
+  async create(createContactDto: CreateContactDto): Promise<Contact> {
     const contact = this.contactsRepository.create(createContactDto);
-    return this.contactsRepository.save(contact);
+    return await this.contactsRepository.save(contact);
   }
 
-  findAll() {
-    return this.contactsRepository.find({
-      order: {
-        createdAt: 'DESC',
-      },
-    });
+  async findAll(): Promise<Contact[]> {
+    return await this.contactsRepository.find();
   }
 
-  async findOne(id: number) {
-    const contact = await this.contactsRepository.findOne({ where: { id } });
+  async findOne(id: number): Promise<Contact> {
+    const contact = await this.contactsRepository.findOneBy({ id });
     if (!contact) {
       throw new NotFoundException(`Contact with ID ${id} not found`);
     }
     return contact;
   }
 
-  async update(id: number, updateContactDto: UpdateContactDto) {
-    const contact = await this.findOne(id);
-    Object.assign(contact, updateContactDto);
-    return this.contactsRepository.save(contact);
+  async update(id: number, updateContactDto: UpdateContactDto): Promise<Contact> {
+    await this.contactsRepository.update(id, updateContactDto);
+    return await this.findOne(id);
   }
 
-  async remove(id: number) {
-    const contact = await this.findOne(id);
-    return this.contactsRepository.remove(contact);
+  async remove(id: number): Promise<boolean> {
+    const result = await this.contactsRepository.delete(id);
+    return result && result.affected ? result.affected > 0 : false;
   }
 } 
