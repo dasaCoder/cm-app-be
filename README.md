@@ -26,6 +26,7 @@ A RESTful API for managing contacts built with NestJS and PostgreSQL.
    ```
 
 3. **Create table and insert mock data**
+
    Table will be created automatically when the container is started.
    ```sql
    -- Create contacts table
@@ -40,7 +41,8 @@ A RESTful API for managing contacts built with NestJS and PostgreSQL.
    );
    ```
 
-4. **Start the Docker containers**
+5. **Start the Docker containers**
+
    First, make sure no containers are running and remove old volumes:
    ```bash
    docker-compose down -v
@@ -51,7 +53,8 @@ A RESTful API for managing contacts built with NestJS and PostgreSQL.
    docker-compose up --build
    ```
 
-5. **Verify database initialization**
+6. **Verify database initialization**
+
    In a new terminal, check if the data was loaded:
    ```bash
    docker exec -it $(docker ps -q -f name=postgres) psql -U postgres -d contacts_db 
